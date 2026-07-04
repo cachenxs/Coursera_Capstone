@@ -1,0 +1,728 @@
+<title>The Future of Metadata Platforms — DataHub &amp; the AI-Era Catalog Landscape</title>
+<style>
+  :root {
+    --paper: #F4F6F8;
+    --surface: #FFFFFF;
+    --ink: #1A2530;
+    --ink-2: #43525F;
+    --muted: #5C6B78;
+    --faint: #8595A3;
+    --hairline: #D8DFE5;
+    --hairline-2: #E7ECF0;
+    --accent: #0086B3;
+    --accent-ink: #006B8F;
+    --accent-soft: rgba(0, 134, 179, 0.08);
+    --amber: #B26A00;
+    --amber-soft: rgba(178, 106, 0, 0.09);
+    --chart-1: #0086B3;
+    --chart-2: #B26A00;
+    --code-bg: #EDF1F4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10161C;
+      --surface: #171F28;
+      --ink: #E6EDF2;
+      --ink-2: #C0CCD6;
+      --muted: #94A5B3;
+      --faint: #6E8090;
+      --hairline: #2A3641;
+      --hairline-2: #212B35;
+      --accent: #3FB4D0;
+      --accent-ink: #5FC3DB;
+      --accent-soft: rgba(63, 180, 208, 0.10);
+      --amber: #D89A45;
+      --amber-soft: rgba(216, 154, 69, 0.12);
+      --chart-1: #1F9CB2;
+      --chart-2: #C08432;
+      --code-bg: #1D2833;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10161C;
+    --surface: #171F28;
+    --ink: #E6EDF2;
+    --ink-2: #C0CCD6;
+    --muted: #94A5B3;
+    --faint: #6E8090;
+    --hairline: #2A3641;
+    --hairline-2: #212B35;
+    --accent: #3FB4D0;
+    --accent-ink: #5FC3DB;
+    --accent-soft: rgba(63, 180, 208, 0.10);
+    --amber: #D89A45;
+    --amber-soft: rgba(216, 154, 69, 0.12);
+    --chart-1: #1F9CB2;
+    --chart-2: #C08432;
+    --code-bg: #1D2833;
+  }
+  :root[data-theme="light"] {
+    --paper: #F4F6F8;
+    --surface: #FFFFFF;
+    --ink: #1A2530;
+    --ink-2: #43525F;
+    --muted: #5C6B78;
+    --faint: #8595A3;
+    --hairline: #D8DFE5;
+    --hairline-2: #E7ECF0;
+    --accent: #0086B3;
+    --accent-ink: #006B8F;
+    --accent-soft: rgba(0, 134, 179, 0.08);
+    --amber: #B26A00;
+    --amber-soft: rgba(178, 106, 0, 0.09);
+    --chart-1: #0086B3;
+    --chart-2: #B26A00;
+    --code-bg: #EDF1F4;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.65;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  .serif, h1, h2, h3 {
+    font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .mono {
+    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  .shell { max-width: 1060px; margin: 0 auto; padding: 0 28px 96px; }
+  .prose { max-width: 70ch; }
+
+  a { color: var(--accent-ink); text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--accent); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+  /* ---------- header / hero ---------- */
+  header { padding: 56px 0 0; }
+  .kicker-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: 1px solid var(--hairline); padding-bottom: 14px; }
+  .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); }
+  .kicker b { color: var(--accent-ink); font-weight: 600; }
+  h1 { font-size: clamp(34px, 5.2vw, 54px); line-height: 1.08; margin: 40px 0 18px; max-width: 21ch; }
+  .dek { font-size: 19px; line-height: 1.6; color: var(--ink-2); max-width: 62ch; margin: 0 0 8px; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 40px; align-items: start; }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } .hero-art { display: none; } }
+  .hero-art { padding-top: 48px; }
+  .hero-art svg { width: 100%; height: auto; display: block; }
+  .edge { stroke: var(--hairline); stroke-width: 1.5; fill: none; }
+  .edge.hot { stroke: var(--accent); stroke-width: 2; }
+  .node { fill: var(--surface); stroke: var(--faint); stroke-width: 1.5; }
+  .node.hot { stroke: var(--accent); stroke-width: 2; }
+  .node-label { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 9px; fill: var(--muted); }
+
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 40px 0 0; }
+  @media (max-width: 720px) { .stat-row { grid-template-columns: 1fr; } }
+  .stat { background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; padding: 18px 20px 16px; }
+  .stat .n { font-family: Charter, Cambria, Georgia, serif; font-size: 34px; font-weight: 700; line-height: 1; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+  .stat .d { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+  /* ---------- table of contents ---------- */
+  nav.toc { margin: 56px 0 0; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); padding: 18px 0; display: flex; flex-wrap: wrap; gap: 6px 26px; }
+  nav.toc a { font-size: 13.5px; text-decoration: none; color: var(--ink-2); }
+  nav.toc a:hover { color: var(--accent-ink); }
+  nav.toc .num { color: var(--faint); font-size: 11px; margin-right: 5px; }
+
+  /* ---------- sections ---------- */
+  section { margin-top: 88px; }
+  .eyebrow { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent-ink); margin: 0 0 10px; }
+  .eyebrow .idx { color: var(--faint); margin-right: 10px; }
+  h2 { font-size: clamp(26px, 3.4vw, 34px); line-height: 1.15; margin: 0 0 20px; max-width: 26ch; }
+  h3 { font-size: 20px; margin: 40px 0 10px; }
+  p { margin: 0 0 16px; }
+  .prose ul, .prose ol { padding-left: 22px; margin: 0 0 16px; }
+  .prose li { margin-bottom: 8px; }
+  strong { color: var(--ink); }
+  .lead-in { font-size: 18px; color: var(--ink-2); }
+
+  .callout { background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 16px 20px; margin: 24px 0; max-width: 70ch; }
+  .callout p { margin: 0; font-size: 15.5px; }
+  .callout .tag { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent-ink); margin-bottom: 6px; font-family: ui-monospace, Menlo, monospace; }
+
+  /* ---------- tables ---------- */
+  .table-scroll { overflow-x: auto; margin: 28px 0; border: 1px solid var(--hairline); border-radius: 8px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 780px; }
+  caption { caption-side: top; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); padding: 14px 16px 0; font-family: ui-monospace, Menlo, monospace; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 16px; border-bottom: 1px solid var(--hairline-2); line-height: 1.5; }
+  thead th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); border-bottom: 1px solid var(--hairline); white-space: nowrap; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
+  tbody th { font-weight: 600; color: var(--ink); white-space: nowrap; }
+  td .sub { display: block; color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+  .num-cell { font-variant-numeric: tabular-nums; font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
+  .dots { letter-spacing: 2px; color: var(--accent-ink); white-space: nowrap; }
+  .dots .off { color: var(--hairline); }
+  .pill { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; padding: 2px 9px; border-radius: 999px; border: 1px solid; white-space: nowrap; }
+  .pill.oss { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent) 40%, transparent); background: var(--accent-soft); }
+  .pill.com { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 40%, transparent); background: var(--amber-soft); }
+
+  /* ---------- chart ---------- */
+  figure.chart { background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 22px 24px 18px; margin: 28px 0; }
+  figure.chart figcaption { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+  figure.chart .chart-sub { font-size: 12.5px; color: var(--muted); margin-bottom: 18px; }
+  .bar-row { display: grid; grid-template-columns: 130px 1fr; align-items: center; gap: 12px; padding: 5px 0; }
+  .bar-row .lbl { font-size: 13px; color: var(--ink-2); text-align: right; line-height: 1.3; }
+  .bar-track { position: relative; height: 22px; }
+  .bar { position: relative; height: 100%; background: var(--chart-1); border-radius: 0 4px 4px 0; min-width: 3px; display: flex; align-items: center; transition: opacity 120ms ease; }
+  .bar-row:hover .bar { opacity: 0.82; }
+  .bar .val { position: absolute; left: calc(100% + 9px); font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  figure.chart .src { font-size: 11.5px; color: var(--faint); margin-top: 14px; }
+
+  /* ---------- vendor / case cards ---------- */
+  .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 28px 0; }
+  @media (max-width: 760px) { .card-grid { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 20px 22px; }
+  .card h4 { font-family: Charter, Cambria, Georgia, serif; font-size: 17.5px; margin: 0 0 4px; }
+  .card .meta { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); margin-bottom: 12px; font-family: ui-monospace, Menlo, monospace; }
+  .card p { font-size: 14.5px; margin-bottom: 10px; color: var(--ink-2); }
+  .card p:last-child { margin-bottom: 0; }
+  .card .takeaway { font-size: 13.5px; color: var(--ink); border-top: 1px solid var(--hairline-2); padding-top: 10px; margin-top: 12px; }
+  .card .takeaway::before { content: "Direction — "; font-weight: 600; color: var(--accent-ink); }
+  .case .takeaway::before { content: "Lesson — "; }
+
+  /* ---------- timeline ---------- */
+  .timeline { border-left: 2px solid var(--hairline); margin: 28px 0 28px 6px; padding-left: 26px; max-width: 70ch; }
+  .tl-item { position: relative; padding-bottom: 24px; }
+  .tl-item:last-child { padding-bottom: 4px; }
+  .tl-item::before { content: ""; position: absolute; left: -33px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 2.5px solid var(--accent); }
+  .tl-item .yr { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; color: var(--accent-ink); letter-spacing: 0.06em; }
+  .tl-item .what { font-weight: 600; margin: 2px 0 3px; }
+  .tl-item p { font-size: 14.5px; color: var(--ink-2); margin: 0; }
+
+  /* ---------- verdict box ---------- */
+  .verdicts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+  @media (max-width: 860px) { .verdicts { grid-template-columns: 1fr; } }
+  .verdict { background: var(--surface); border: 1px solid var(--hairline); border-top: 3px solid var(--accent); border-radius: 6px; padding: 18px 20px; }
+  .verdict h4 { margin: 0 0 8px; font-size: 15px; }
+  .verdict p { font-size: 13.5px; color: var(--ink-2); margin: 0; }
+
+  /* ---------- sources ---------- */
+  .sources ol { padding-left: 22px; font-size: 13.5px; color: var(--muted); column-gap: 40px; }
+  @media (min-width: 860px) { .sources ol { columns: 2; } }
+  .sources li { margin-bottom: 8px; break-inside: avoid; }
+
+  footer { margin-top: 96px; border-top: 1px solid var(--hairline); padding-top: 18px; font-size: 12.5px; color: var(--faint); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+</style>
+
+<div class="shell">
+
+<header>
+  <div class="kicker-row">
+    <span class="kicker mono">Research report · <b>Metadata &amp; data-catalog platforms</b></span>
+    <span class="kicker mono">July 2026</span>
+  </div>
+  <div class="hero-grid">
+    <div>
+      <h1>From Data Catalog to Context Platform</h1>
+      <p class="dek">The future of DataHub and its peers — how metadata and lineage became AI infrastructure, where the open-source and commercial catalogs are heading, and what industry leaders are actually running in production.</p>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 280 220">
+        <path class="edge" d="M40 40 C 90 40, 90 90, 140 90" />
+        <path class="edge hot" d="M40 110 C 90 110, 90 90, 140 90" />
+        <path class="edge" d="M40 180 C 90 180, 90 90, 140 90" />
+        <path class="edge hot" d="M140 90 C 190 90, 190 60, 240 60" />
+        <path class="edge" d="M140 90 C 190 90, 190 150, 240 150" />
+        <circle class="node" cx="40" cy="40" r="9" />
+        <circle class="node hot" cx="40" cy="110" r="9" />
+        <circle class="node" cx="40" cy="180" r="9" />
+        <circle class="node hot" cx="140" cy="90" r="12" />
+        <circle class="node hot" cx="240" cy="60" r="9" />
+        <circle class="node" cx="240" cy="150" r="9" />
+        <text class="node-label" x="30" y="26">source</text>
+        <text class="node-label" x="30" y="96">source</text>
+        <text class="node-label" x="30" y="204">source</text>
+        <text class="node-label" x="118" y="118">context graph</text>
+        <text class="node-label" x="222" y="46">agent</text>
+        <text class="node-label" x="222" y="174">analyst</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat">
+      <div class="n">82%</div>
+      <div class="d">of IT &amp; data leaders say agentic AI cannot reach production value without a context platform (State of Context Management Report 2026).</div>
+    </div>
+    <div class="stat">
+      <div class="n">~14k / ~12k</div>
+      <div class="d">GitHub stars for OpenMetadata vs DataHub in mid-2026 — the two OSS front-runners after OpenMetadata's 2026 surge.</div>
+    </div>
+    <div class="stat">
+      <div class="n">100+</div>
+      <div class="d">production connectors in the leading OSS platforms, now exporting metadata to AI agents over the Model Context Protocol (MCP).</div>
+    </div>
+  </div>
+
+  <nav class="toc" aria-label="Table of contents">
+    <a href="#s1"><span class="num mono">01</span>Metadata &amp; lineage in the AI era</a>
+    <a href="#s2"><span class="num mono">02</span>DataHub: evolution &amp; future</a>
+    <a href="#s3"><span class="num mono">03</span>Commercial platform directions</a>
+    <a href="#s4"><span class="num mono">04</span>Open-source comparison</a>
+    <a href="#s5"><span class="num mono">05</span>OSS vs commercial</a>
+    <a href="#s6"><span class="num mono">06</span>Industrial use cases</a>
+    <a href="#s7"><span class="num mono">07</span>Outlook &amp; recommendations</a>
+    <a href="#s8"><span class="num mono">08</span>Sources</a>
+  </nav>
+</header>
+
+<!-- ================= 01 ================= -->
+<section id="s1">
+  <p class="eyebrow mono"><span class="idx">01</span>The AI-era case for metadata</p>
+  <h2>Metadata and lineage are becoming the context layer for AI</h2>
+  <div class="prose">
+    <p class="lead-in">For a decade, data catalogs were built for humans: a searchable inventory that helped analysts find tables and helped stewards pass audits. In 2025–2026 the primary consumer changed. LLM applications and autonomous agents now need exactly what catalogs have always collected — schemas, semantics, ownership, quality signals, lineage — but delivered programmatically, in real time, at machine speed.</p>
+    <p>This shift has a name the industry has converged on: <strong>context management</strong> (or the "context platform"). The reasoning is simple. An LLM is only as trustworthy as the context in its window. Enterprises found that context <em>quality</em>, not context volume, is the limiting factor for production agents: an agent that cannot tell a certified revenue table from a deprecated staging copy will confidently produce wrong answers. The metadata graph — what each dataset contains, what columns mean, who owns them, how fresh and how trusted they are — is the antidote to that failure mode.</p>
+    <h3>Why lineage specifically matters more, not less</h3>
+    <ul>
+      <li><strong>Provenance for AI outputs.</strong> When an agent answers a question or a model makes a decision, lineage is the audit trail from the answer back through pipelines to source systems. Regulations (EU AI Act, model risk management in finance) increasingly require exactly this traceability for training data and features.</li>
+      <li><strong>Impact analysis at machine speed.</strong> Column-level lineage lets both engineers and agents ask "if this column changes, what breaks downstream — which dashboards, which features, which agents?" before the change ships.</li>
+      <li><strong>Trust scoring for retrieval.</strong> RAG and text-to-SQL systems use lineage-derived signals (certified upstream sources, passing quality checks, active ownership) to rank which assets an agent is allowed to reason over.</li>
+      <li><strong>Automated governance.</strong> Classification (PII, confidential) propagates along lineage edges, so a policy set at the source follows the data into every derived table, dashboard, and now every AI feature store and prompt pipeline.</li>
+    </ul>
+    <div class="callout">
+      <span class="tag">Mechanism of the shift</span>
+      <p>The <strong>Model Context Protocol (MCP)</strong>, introduced by Anthropic in late 2024 and adopted across the industry, is the concrete plumbing of this change. Every major catalog — DataHub, OpenMetadata/Collate, Atlan, Collibra, Google's Knowledge Catalog, Databricks — shipped an MCP server in 2025–2026, letting agents in Claude, Cursor, Windsurf, or custom frameworks search assets, traverse lineage, inspect schemas, and check policies through one standard interface. The catalog UI is becoming just one client among many; the durable product is the governed metadata graph behind it.</p>
+    </div>
+    <p>Two more forces compound the shift. <strong>Unstructured data</strong> is entering catalog scope — PDFs, documents, embeddings, and vector stores need the same classification and lineage as tables, because agents consume them the same way. And <strong>data products / data contracts</strong> (machine-readable schemas, SLAs, and quality guarantees) are becoming the packaging unit that both humans and agents subscribe to, with the catalog enforcing the contract.</p>
+  </div>
+</section>
+
+<!-- ================= 02 ================= -->
+<section id="s2">
+  <p class="eyebrow mono"><span class="idx">02</span>The reference implementation</p>
+  <h2>DataHub: from LinkedIn's WhereHows to a context platform</h2>
+  <div class="prose">
+    <p class="lead-in">DataHub is the clearest single case study of how this category is evolving, because it has publicly reinvented itself three times — search tool, metadata platform, and now "The Context Platform for your Data and AI Stack."</p>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="yr">2016 → 2019</div>
+      <div class="what">WhereHows → DataHub at LinkedIn</div>
+      <p>LinkedIn replaces its crawl-based WhereHows catalog with DataHub, pioneering a stream-based, event-driven metadata architecture: sources push change events through Kafka into a graph + search index, so metadata is always fresh rather than periodically scraped.</p>
+    </div>
+    <div class="tl-item">
+      <div class="yr">2020 → 2021</div>
+      <div class="what">Open source &amp; commercialization</div>
+      <p>Open-sourced under the Linux Foundation umbrella of governance-neutral hosting; core team spins out as Acryl Data with a $9M seed to build DataHub Cloud (managed SaaS). Community adoption spreads to Expedia, Saxo Bank, Klarna, Etsy, and others.</p>
+    </div>
+    <div class="tl-item">
+      <div class="yr">Jan 2025</div>
+      <div class="what">DataHub 1.0</div>
+      <p>Five-year anniversary release: 80+ production connectors, automated column-level lineage, data contracts, observability integrations, and a revamped UX — the "mature metadata platform" milestone.</p>
+    </div>
+    <div class="tl-item">
+      <div class="yr">2025</div>
+      <div class="what">The MCP server</div>
+      <p>Official <span class="mono">mcp-server-datahub</span> ships: agents get entity search, schema and ownership retrieval, upstream/downstream lineage traversal, and query-to-dataset mapping over live metadata — with OAuth2 dynamic client registration for enterprise auth.</p>
+    </div>
+    <div class="tl-item">
+      <div class="yr">May 2026</div>
+      <div class="what">DataHub Cloud v1 — the context platform</div>
+      <p>Repositioned as a context platform for analytics agents: the event-driven graph continuously syncs 100+ sources and exposes governed context (lineage + glossary + ownership + classification + docs) to MCP-compatible AI tools. Marketing follows engineering: "context, not catalog."</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h3>Where DataHub goes next</h3>
+    <ul>
+      <li><strong>Agent-first surface area.</strong> The roadmap treats AI agents as first-class metadata consumers: LLM-friendly metadata serialization, MCP as a stable contract, and "context APIs" that return ranked, trust-scored context rather than raw records.</li>
+      <li><strong>Real-time as the moat.</strong> DataHub bets that streaming metadata (versus batch-crawled snapshots) is decisive once agents act autonomously — a stale lineage edge misleads an agent instantly, at scale.</li>
+      <li><strong>Governance automation.</strong> Policy-aware agents that enforce classification and access rules automatically, flag violations before they happen, and keep audit trails — governance as a continuously running process instead of a quarterly project.</li>
+      <li><strong>The open-core tension.</strong> Advanced AI features and observability concentrate in DataHub Cloud, while the OSS core competes with a faster-moving OpenMetadata. Managing that split is DataHub's key strategic risk over 2026–2028.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 03 ================= -->
+<section id="s3">
+  <p class="eyebrow mono"><span class="idx">03</span>The commercial field</p>
+  <h2>Where the commercial platforms are heading</h2>
+  <div class="prose">
+    <p class="lead-in">Two distinct commercial species are converging on the same territory: <strong>platform-native catalogs</strong> (Google, Databricks, Snowflake, Microsoft) that govern their own engine first, and <strong>independent catalog vendors</strong> (Atlan, Collibra, Alation, Informatica) that federate across everything. Every one of them re-platformed around AI in 2025–2026.</p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Google Cloud Knowledge Catalog <span class="pill com">Platform-native</span></h4>
+      <div class="meta">Formerly Dataplex Universal Catalog · renamed April 2026</div>
+      <p>Google's catalog has been renamed twice in three years (Data Catalog → Dataplex Universal Catalog → Knowledge Catalog), and the latest name is the strategy: a <strong>Gemini-powered context graph</strong>. It auto-harvests technical metadata from BigQuery, AlloyDB, Spanner and third-party systems, then uses Gemini to infer business intent from schemas, query logs, and semantic models — generating descriptions, discovering relationships, and proposing verified SQL patterns. It now profiles <em>unstructured</em> data (e.g. PDFs in Cloud Storage) to extract entities and relationships, and ships pre-built MCP tools so Gemini and third-party agents query the catalog directly.</p>
+      <p class="takeaway">The catalog as an anti-hallucination layer — "grounding AI agents in enterprise truth" is the stated product goal, not an add-on.</p>
+    </div>
+    <div class="card">
+      <h4>Databricks Unity Catalog <span class="pill com">Platform-native</span></h4>
+      <div class="meta">Lakehouse governance · OSS'd June 2024</div>
+      <p>Unity Catalog governs the broadest asset range of the native catalogs: tables, files, notebooks, ML models, vector indexes, and AI agents/tools themselves, across workspaces and clouds. Databricks open-sourced the core and supports the Iceberg REST catalog API, positioning UC as a multi-engine standard rather than a walled garden. Its AI direction runs through the "Data Intelligence" thesis: automated documentation, semantic understanding of the estate, metric views as a governed semantic layer, and governance for GenAI assets (models, prompts, agent tools) alongside data.</p>
+      <p class="takeaway">Govern data <em>and</em> AI assets in one permission model; win by being where the compute already is.</p>
+    </div>
+    <div class="card">
+      <h4>Snowflake Horizon Catalog <span class="pill com">Platform-native</span></h4>
+      <div class="meta">The "Data Cloud" governance layer + Polaris</div>
+      <p>Horizon extends Snowflake's built-in governance (tags, masking, row policies, Universal Search) beyond native tables to external Iceberg — even Delta tables — with policies enforced at the catalog layer. Via Apache Polaris (Snowflake-initiated, open source), any engine speaking the Iceberg REST spec can read <em>and write</em> under vended credentials with governance intact. AI direction couples Horizon to Cortex: agents and Copilot features inherit the same discovery, trust signals, and access policies the warehouse enforces.</p>
+      <p class="takeaway">Compete on openness at the table-format layer while keeping governance — and therefore gravity — inside the Data Cloud.</p>
+    </div>
+    <div class="card">
+      <h4>Microsoft Purview Unified Catalog <span class="pill com">Platform-native</span></h4>
+      <div class="meta">Governance domains · data products · Copilot</div>
+      <p>Purview merged data governance with security/compliance into one control plane. The Unified Catalog organizes the estate into governance domains and subscribable <strong>data products</strong>, searched through an AI copilot. The 2026 direction is AI governance itself: cross-workload AI policies (define once, enforce across Copilot, GitHub, Power Platform), a federated catalog of approved models, and DSPM for AI — auditing what data Copilots and agents actually touch.</p>
+      <p class="takeaway">The catalog becomes the policy plane for AI usage across the entire Microsoft estate, not just a data inventory.</p>
+    </div>
+    <div class="card">
+      <h4>Atlan <span class="pill com">Independent vendor</span></h4>
+      <div class="meta">"Context lakehouse" · MCP-native</div>
+      <p>Atlan moved from Visionary to Leader in Gartner's 2026 MQ on the back of an explicitly agent-first architecture: native MCP server, real-time metadata sync across 100+ connectors, and a GraphQL API agents query directly. Its 2026 "Context Lakehouse" frames the pitch: certified, governance-embedded context served to agents — not raw schema dumps.</p>
+      <p class="takeaway">Governed context first, agent capability second — the independent-vendor version of the DataHub thesis, sold as SaaS.</p>
+    </div>
+    <div class="card">
+      <h4>Collibra · Alation · Informatica <span class="pill com">Independent vendors</span></h4>
+      <div class="meta">Governance incumbents retooling for agents</div>
+      <p>Collibra shipped an AI Command Center (May 2026) and an MCP server distributed through the Databricks Marketplace — its posture is <em>governance and oversight of agents</em>, not agent execution. Alation's Agent Builder went GA in Q1 2026, layering task-specific agents on its behavioral-intelligence catalog. Informatica (acquired by Salesforce, 2025) folds CLAIRE-powered metadata into Salesforce's agent stack — notably giving Salesforce <strong>Data Cloud</strong> an enterprise metadata backbone for grounding Agentforce agents.</p>
+      <p class="takeaway">The incumbents' bet: enterprises will pay for the <em>control plane</em> that supervises other people's agents.</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <div class="callout">
+      <span class="tag">Common thread</span>
+      <p>Every commercial roadmap converges on the same four moves: <strong>(1)</strong> an MCP or equivalent agent interface, <strong>(2)</strong> LLM-generated documentation and semantics at harvest time, <strong>(3)</strong> unstructured data and AI assets (models, prompts, agents) brought under catalog governance, and <strong>(4)</strong> the catalog repositioned as the grounding/trust layer that makes agents safe to deploy. The differences are about center of gravity — engine-native vs federated — not about direction.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 04 ================= -->
+<section id="s4">
+  <p class="eyebrow mono"><span class="idx">04</span>Open source, compared</p>
+  <h2>The OSS landscape: DataHub, OpenMetadata, Atlas, Amundsen</h2>
+  <div class="prose">
+    <p class="lead-in">Four projects define the open-source category, with OpenLineage/Marquez as the lineage-standard companion. Two of the four are effectively in maintenance mode; the real 2026 contest is DataHub vs OpenMetadata.</p>
+  </div>
+
+  <figure class="chart">
+    <figcaption>Community popularity — GitHub stars</figcaption>
+    <div class="chart-sub">Approximate totals, mid-2026 (GitHub / OSS Insight). Stars measure attention, not deployments — but the trend line matters.</div>
+    <div role="img" aria-label="Bar chart of GitHub stars: OpenMetadata about 13,900; DataHub about 11,900; Amundsen about 4,500; Apache Atlas about 1,900; Marquez about 1,800.">
+      <div class="bar-row" title="OpenMetadata — ~13,900 stars; #1 on GitHub Trending in April 2026">
+        <span class="lbl">OpenMetadata</span>
+        <div class="bar-track"><div class="bar" style="width: 86%;"><span class="val">~13,900</span></div></div>
+      </div>
+      <div class="bar-row" title="DataHub — ~11,900 stars; steady growth since 2020">
+        <span class="lbl">DataHub</span>
+        <div class="bar-track"><div class="bar" style="width: 74%;"><span class="val">~11,900</span></div></div>
+      </div>
+      <div class="bar-row" title="Amundsen — ~4,500 stars; growth flat since ~2023">
+        <span class="lbl">Amundsen</span>
+        <div class="bar-track"><div class="bar" style="width: 28%;"><span class="val">~4,500</span></div></div>
+      </div>
+      <div class="bar-row" title="Apache Atlas — ~1,900 stars; Hadoop-era governance">
+        <span class="lbl">Apache Atlas</span>
+        <div class="bar-track"><div class="bar" style="width: 12%;"><span class="val">~1,900</span></div></div>
+      </div>
+      <div class="bar-row" title="Marquez (OpenLineage reference) — ~1,800 stars; lineage-focused">
+        <span class="lbl">Marquez</span>
+        <div class="bar-track"><div class="bar" style="width: 11%;"><span class="val">~1,800</span></div></div>
+      </div>
+    </div>
+    <div class="src">OpenMetadata overtook DataHub in stars during 2025 and hit #1 on GitHub Trending globally in April 2026 (~1,960 stars in a single day). OpenMetadata reports 450+ code contributors and claims 4,000+ enterprise deployments; DataHub retains the larger blue-chip production footprint.</div>
+  </figure>
+
+  <div class="table-scroll">
+    <table>
+      <caption>Detailed comparison — mid-2026</caption>
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>DataHub</th>
+          <th>OpenMetadata</th>
+          <th>Apache Atlas</th>
+          <th>Amundsen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Origin / steward</th>
+          <td>LinkedIn (2019) · DataHub project + Acryl Data<span class="sub">Commercial: DataHub Cloud</span></td>
+          <td>Uber Databook &amp; Atlas alumni (2021) · Collate<span class="sub">Commercial: Collate SaaS</span></td>
+          <td>Hortonworks (2015) · Apache Foundation<span class="sub">No dedicated vendor</span></td>
+          <td>Lyft (2019) · LF AI &amp; Data<span class="sub">Vendor (Stemma) wound down</span></td>
+        </tr>
+        <tr>
+          <th>Popularity / momentum</th>
+          <td><span class="dots">●●●●<span class="off">○</span></span><span class="sub">~11.9k stars; strongest enterprise logos; steady releases</span></td>
+          <td><span class="dots">●●●●●</span><span class="sub">~13.9k stars; fastest growth; weekly patch cadence</span></td>
+          <td><span class="dots">●●<span class="off">○○○</span></span><span class="sub">~1.9k stars; maintained but Hadoop-bound</span></td>
+          <td><span class="dots">●<span class="off">○○○○</span></span><span class="sub">~4.5k stars but no active roadmap</span></td>
+        </tr>
+        <tr>
+          <th>Functional scope</th>
+          <td>Discovery, column-level lineage, governance, data contracts, observability hooks, domains/glossary<span class="sub">Broadest lineage depth</span></td>
+          <td>Discovery, lineage, <strong>built-in data quality/profiling</strong>, data contracts (v1.8+), collaboration, glossary<span class="sub">Most complete single package</span></td>
+          <td>Classification, tag-propagation lineage, security integration (Ranger)<span class="sub">Governance for Hadoop stacks</span></td>
+          <td>Search &amp; discovery with usage-ranked results<span class="sub">Discovery only; no governance</span></td>
+        </tr>
+        <tr>
+          <th>Architecture</th>
+          <td>Event-driven: Kafka + search + graph index + relational store<span class="sub">Real-time, scalable, complex</span></td>
+          <td>API-first: MySQL/Postgres + Elasticsearch; deliberately no graph DB<span class="sub">Simple, unified schema</span></td>
+          <td>HBase + Solr + Kafka<span class="sub">Hadoop-native stack</span></td>
+          <td>Neo4j + Elasticsearch microservices<span class="sub">Lightweight</span></td>
+        </tr>
+        <tr>
+          <th>Extensibility</th>
+          <td>100+ connectors; strong event/API model; custom entity types<span class="sub">Best for bespoke metadata models</span></td>
+          <td>90+ connectors; open JSON-schema standard; webhooks; SDKs<span class="sub">Easiest connector authoring</span></td>
+          <td>Hooks for Hive/HBase/Kafka; custom types via REST<span class="sub">Ecosystem-limited</span></td>
+          <td>Databuilder plugin model<span class="sub">Community connectors aging</span></td>
+        </tr>
+        <tr>
+          <th>Deployment effort</th>
+          <td>High — multiple stateful services (Kafka, ES, graph, DB)<span class="sub">Kubernetes strongly advised</span></td>
+          <td>Moderate — fewer moving parts; Docker/K8s quickstarts<span class="sub">Fastest self-hosted time-to-value</span></td>
+          <td>High — assumes a Hadoop cluster<span class="sub">Legacy skill set</span></td>
+          <td>Low-moderate — but you'll outgrow it<span class="sub">Simple until you need governance</span></td>
+        </tr>
+        <tr>
+          <th>User-friendliness</th>
+          <td>Powerful but denser UI; strong for engineers<span class="sub">Improved markedly in 1.0+</span></td>
+          <td>Consistently rated most approachable UI; strong collaboration (tasks, announcements)<span class="sub">Business-user friendly</span></td>
+          <td>Utilitarian, admin-oriented<span class="sub">Not for end users</span></td>
+          <td>Clean "Google-like" search<span class="sub">Its original strength</span></td>
+        </tr>
+        <tr>
+          <th>AI integration</th>
+          <td>Official MCP server; LLM-friendly metadata; context-platform APIs; AI docs generation (Cloud)<span class="sub">Deepest agent story in OSS</span></td>
+          <td>MCP support; MetaPilot copilot &amp; AI Analytics (via Collate); auto-documentation; "open context layer" positioning<span class="sub">AI features land in Collate first</span></td>
+          <td>None meaningful<span class="sub">—</span></td>
+          <td>None; roadmap inactive<span class="sub">—</span></td>
+        </tr>
+        <tr>
+          <th>Best fit</th>
+          <td>Large estates needing deep lineage, real-time metadata, data mesh, agent integration</td>
+          <td>Teams wanting one self-hostable tool covering catalog + quality + collaboration quickly</td>
+          <td>Regulated Hadoop/Cloudera shops already invested in Ranger</td>
+          <td>Historical reference; choose only for pure lightweight discovery</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <h3>Reading the field</h3>
+    <ul>
+      <li><strong>DataHub</strong> remains the engineering-heavy choice: the event-driven architecture is genuinely harder to run, but it buys real-time metadata and the deepest lineage — and its MCP/context-platform work is the most production-proven in open source (see Block, §06).</li>
+      <li><strong>OpenMetadata</strong> won the adoption race on simplicity: one schema, two databases, weekly releases, and quality checks in the box. Its "open context layer" positioning mirrors DataHub's almost word for word — the two projects have converged on the same AI-era thesis from opposite architectural starting points.</li>
+      <li><strong>Apache Atlas</strong> and <strong>Amundsen</strong> illustrate the category's mortality: Atlas is bound to a shrinking Hadoop world, and Amundsen — briefly the most popular catalog of the early 2020s — has no future roadmap. Discovery-only tools didn't survive; governance-plus-context platforms did.</li>
+      <li><strong>OpenLineage/Marquez</strong> plays a different game: OpenLineage is now the de-facto <em>standard</em> for pipeline lineage events (emitted by Airflow, Spark, dbt, Flink) and feeds catalogs rather than competing with them — both DataHub and OpenMetadata ingest it.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 05 ================= -->
+<section id="s5">
+  <p class="eyebrow mono"><span class="idx">05</span>Build, buy, or both</p>
+  <h2>Open source vs commercial: an honest trade-off</h2>
+
+  <div class="table-scroll">
+    <table>
+      <caption>OSS platforms vs commercial solutions</caption>
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>OSS self-hosted <span class="pill oss">DataHub · OpenMetadata</span></th>
+          <th>Managed open-core <span class="pill oss">DataHub Cloud · Collate</span></th>
+          <th>Commercial <span class="pill com">Atlan · Collibra · Alation · native catalogs</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>License cost</th>
+          <td>$0 — but budget 1–3 FTEs for platform ops, upgrades, connector upkeep</td>
+          <td>Subscription; typically well below enterprise-governance list prices</td>
+          <td>Six-figure annual contracts are common at enterprise scale (Collibra/Alation tier)</td>
+        </tr>
+        <tr>
+          <th>Time to value</th>
+          <td>Weeks–months; ingestion and adoption work is yours</td>
+          <td>Days–weeks; vendor runs the platform, you run adoption</td>
+          <td>Days–weeks; native catalogs (Unity, Horizon, Purview) are near-zero setup <em>inside their own platform</em></td>
+        </tr>
+        <tr>
+          <th>Customization</th>
+          <td>Unlimited — custom entity types, forks, private connectors</td>
+          <td>High — OSS core plus vendor extensions</td>
+          <td>Bounded by vendor roadmap and APIs</td>
+        </tr>
+        <tr>
+          <th>AI capabilities</th>
+          <td>MCP servers, LLM-ready APIs; you wire up your own models/agents</td>
+          <td>Turnkey: AI documentation, copilots (MetaPilot, AI Analytics), context APIs</td>
+          <td>Most polished: Gemini-powered harvesting, Agent Builder, AI Command Center, Copilot integration</td>
+        </tr>
+        <tr>
+          <th>Governance depth</th>
+          <td>Good and improving (contracts, policies), but workflow tooling is thinner</td>
+          <td>Adds certification workflows, SLA monitoring, observability</td>
+          <td>Deepest stewardship workflows, policy management, regulatory reporting — Collibra/Purview strongest</td>
+        </tr>
+        <tr>
+          <th>Lock-in risk</th>
+          <td>Minimal; your metadata, your infra, open formats</td>
+          <td>Low — OSS escape hatch keeps vendors honest</td>
+          <td>Real: metadata models and workflows are hard to migrate; native catalogs tie governance to the engine</td>
+        </tr>
+        <tr>
+          <th>Coverage model</th>
+          <td colspan="2">Federated by design — built to catalog a heterogeneous, multi-cloud estate</td>
+          <td>Native catalogs are deepest on their own platform, shallow elsewhere; independent vendors federate like OSS</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verdicts">
+    <div class="verdict">
+      <h4>Choose OSS self-hosted when…</h4>
+      <p>You have platform engineers, a heterogeneous or on-prem estate, data-sovereignty constraints, or need custom metadata models. DataHub for lineage depth and agent integration; OpenMetadata for fastest all-in-one time-to-value.</p>
+    </div>
+    <div class="verdict">
+      <h4>Choose managed open-core when…</h4>
+      <p>You want the OSS model without running Kafka and Elasticsearch yourself — the pragmatic default for mid-size data teams, with an exit path the pure-commercial tools can't offer.</p>
+    </div>
+    <div class="verdict">
+      <h4>Choose commercial when…</h4>
+      <p>Governance workflow, compliance reporting, and business-steward UX are the bottleneck (Collibra, Alation, Purview), you're 90% on one platform (Unity, Horizon, Knowledge Catalog), or you want agent-ready context as SaaS (Atlan).</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p>In practice the pattern emerging in large enterprises is <strong>layered</strong>: engine-native catalogs (Unity, Horizon) govern their own platform; a federated catalog (DataHub, OpenMetadata, Atlan, Purview) sits above them as the cross-estate context graph; and OpenLineage carries pipeline events between the layers. The "one catalog to rule them all" procurement is giving way to a metadata <em>architecture</em>.</p>
+  </div>
+</section>
+
+<!-- ================= 06 ================= -->
+<section id="s6">
+  <p class="eyebrow mono"><span class="idx">06</span>Evidence from production</p>
+  <h2>Real use cases from industry leaders</h2>
+
+  <div class="card-grid">
+    <div class="card case">
+      <h4>LinkedIn — the origin at extreme scale</h4>
+      <div class="meta">DataHub (internal) · social platform</div>
+      <p>LinkedIn built DataHub to catalog millions of datasets, jobs, and features after its crawl-based predecessor (WhereHows) couldn't stay fresh. The push-based, event-driven design — sources emit metadata change events rather than being scraped — became the architectural template the whole category now follows.</p>
+      <p class="takeaway">At sufficient scale, metadata must be streamed, not crawled. Freshness is the product.</p>
+    </div>
+    <div class="card case">
+      <h4>Block — DataHub MCP powering AI agents</h4>
+      <div class="meta">DataHub Cloud + MCP · fintech (Square, Cash App)</div>
+      <p>Block wired DataHub's MCP server into its internal agent stack (home of the open-source "goose" agent), so agents resolve which datasets exist, what columns mean, and what lineage implies before generating SQL or answers. The catalog acts as the agents' ground truth about the data estate.</p>
+      <p class="takeaway">The first production pattern for "agents + catalog" is exactly the context-platform thesis, running today in a regulated fintech.</p>
+    </div>
+    <div class="card case">
+      <h4>Netflix — self-serve metadata workflows</h4>
+      <div class="meta">DataHub · streaming media</div>
+      <p>Netflix uses DataHub to let teams define and manage their own metadata through self-serve workflows — decentralized ownership with central governance, replacing bespoke internal tools (its earlier Metacat served federated <em>technical</em> metadata; DataHub adds the semantic and governance layer).</p>
+      <p class="takeaway">Winning catalogs are operated as products with self-serve workflows, not curated by a central librarian team.</p>
+    </div>
+    <div class="card case">
+      <h4>Saxo Bank — data mesh on DataHub</h4>
+      <div class="meta">DataHub + Great Expectations · investment banking</div>
+      <p>Saxo adopted DataHub as the backbone of a data-mesh operating model: domains publish data as products with owners, glossary terms, and quality checks (Great Expectations) attached. Saxo contributed business-glossary capabilities upstream — a bank co-developing its catalog in the open.</p>
+      <p class="takeaway">In a mesh, the catalog is the marketplace where domains publish products — and regulated firms can still build in public.</p>
+    </div>
+    <div class="card case">
+      <h4>Lyft &amp; Uber — the cautionary parallel</h4>
+      <div class="meta">Amundsen · Databook · ride-hailing</div>
+      <p>Lyft's Amundsen (usage-ranked, "Google-like" data search) and Uber's internal Databook solved discovery brilliantly for their era — Amundsen was the most-adopted OSS catalog circa 2020. But discovery-only scope left no path to governance, quality, or AI context, and Amundsen's community roadmap has effectively ended; Databook's authors went on to found OpenMetadata.</p>
+      <p class="takeaway">Search alone is a feature, not a platform. The category consolidated around tools that own the full context graph.</p>
+    </div>
+    <div class="card case">
+      <h4>Microsoft — governing its own estate with Purview</h4>
+      <div class="meta">Purview Unified Catalog · ~half-million employees &amp; vendors</div>
+      <p>Microsoft's internal digital team runs Purview Unified Catalog over its enterprise data estate: governance domains, curated data products, and health controls give executives measurable data-quality and compliance posture — the same catalog now extended to police what Copilots and agents can access.</p>
+      <p class="takeaway">Catalog KPIs (curation coverage, quality scores, access hygiene) are becoming board-level AI-readiness metrics.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 07 ================= -->
+<section id="s7">
+  <p class="eyebrow mono"><span class="idx">07</span>Where this lands</p>
+  <h2>Outlook 2026 → 2028 and recommendations</h2>
+  <div class="prose">
+    <h3>Five predictions</h3>
+    <ol>
+      <li><strong>"Catalog" disappears as a category name.</strong> DataHub, OpenMetadata, Atlan, and Google have already rebranded around <em>context</em>. By 2028, buying a "data catalog" will mean buying a context platform whose primary consumers are agents, with the human UI as one client.</li>
+      <li><strong>MCP (or a successor) becomes table stakes,</strong> and differentiation moves up-stack: trust scoring, context ranking, and policy-aware retrieval — <em>which</em> context an agent gets, not <em>whether</em> it can connect.</li>
+      <li><strong>Lineage expands to AI assets.</strong> Prompt → model → agent → answer joins source → table → dashboard in the same graph, driven by AI-act-style regulation and internal model-risk teams. Expect OpenLineage extensions for agent/LLM events.</li>
+      <li><strong>The OSS duopoly consolidates.</strong> DataHub and OpenMetadata absorb the remaining OSS mindshare (Atlas and Amundsen fade to legacy), while both monetize AI features through their clouds — keeping healthy pressure on Collibra/Alation pricing.</li>
+      <li><strong>Layered metadata architectures become the default:</strong> engine-native catalogs below, one federated context graph above, standards (Iceberg REST, OpenLineage, MCP) as the seams.</li>
+    </ol>
+
+    <h3>Practical guidance</h3>
+    <ul>
+      <li><strong>Single-platform shop (mostly Databricks / Snowflake / GCP / Microsoft):</strong> use the native catalog (Unity / Horizon / Knowledge Catalog / Purview) — the built-in AI integration and zero-ETL governance beat anything bolted on.</li>
+      <li><strong>Heterogeneous estate, strong engineering:</strong> DataHub if lineage depth, real-time metadata, and agent integration lead your requirements; OpenMetadata if breadth-plus-simplicity and built-in quality checks do. Pilot both — a two-week Docker/K8s spike per tool answers most questions.</li>
+      <li><strong>Governance-led, steward-heavy organization:</strong> Atlan (agent-forward) or Collibra/Alation (workflow-deep), with OSS as leverage in the negotiation.</li>
+      <li><strong>Whatever you choose:</strong> instrument pipelines with OpenLineage now, demand an MCP interface in every RFP, and treat metadata freshness as an SLO — the AI era punishes stale context faster than missing context.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 08 ================= -->
+<section id="s8" class="sources">
+  <p class="eyebrow mono"><span class="idx">08</span>References</p>
+  <h2>Sources</h2>
+  <ol>
+    <li><a href="https://datahub.com/blog/context-management/">DataHub — Context Management: The Missing Piece for Agentic AI</a></li>
+    <li><a href="https://datahub.com/products/context-platform/">DataHub Cloud — Context Platform for AI Agents</a></li>
+    <li><a href="https://github.com/datahub-project/datahub">GitHub — datahub-project/datahub: The Context Platform for your Data and AI Stack</a></li>
+    <li><a href="https://docs.datahub.com/docs/features/feature-guides/mcp">DataHub Docs — DataHub MCP Server</a></li>
+    <li><a href="https://datahub.com/blog/datahub-mcp-server-block-ai-agents-use-case/">DataHub — How Block Uses DataHub's MCP Server to Power AI Agents</a></li>
+    <li><a href="https://datahub.com/blog/agents-in-production-datahub-mcp/">DataHub — Agents in Production: How DataHub MCP Closes the Context Gap</a></li>
+    <li><a href="https://datahub.com/blog/data-lineage-tools/">DataHub — Data Lineage Tools in 2026: Where Lineage Lives</a></li>
+    <li><a href="https://datahub.com/blog/open-source-data-lineage/">DataHub — Open Source Data Lineage: Tools and Tradeoffs</a></li>
+    <li><a href="https://datahub.com/news/acryl-data-seeds-9m-for-metadata-management/">Acryl Data Secures $9M to Transform Metadata Management</a></li>
+    <li><a href="https://www.linkedin.com/blog/engineering/archive/data-hub">LinkedIn Engineering — DataHub: A generalized metadata search &amp; discovery tool</a></li>
+    <li><a href="https://datahub.com/blog/enabling-data-discovery-in-a-data-mesh-the-saxo-journey/">DataHub — Enabling Data Discovery in a Data Mesh: The Saxo Bank Journey</a></li>
+    <li><a href="https://thedataguy.pro/writing/2025/08/open-source-data-governance-frameworks/">TheDataGuy — Open-Source Data Governance Frameworks: OpenMetadata, DataHub, Apache Atlas, Amundsen</a></li>
+    <li><a href="https://atlan.com/openmetadata-vs-datahub/">Atlan — OpenMetadata vs DataHub: Which One to Choose in 2026</a></li>
+    <li><a href="https://atlan.com/amundsen-vs-datahub/">Atlan — Amundsen vs DataHub: How to Choose (2026 Guide)</a></li>
+    <li><a href="https://ossinsight.io/compare/open-metadata/OpenMetadata/datahub-project/datahub">OSS Insight — OpenMetadata vs DataHub repository comparison</a></li>
+    <li><a href="https://open-metadata.org/">OpenMetadata — #1 Open Source Context Layer</a></li>
+    <li><a href="https://github.com/open-metadata/OpenMetadata">GitHub — open-metadata/OpenMetadata</a></li>
+    <li><a href="https://blog.getcollate.io/introducing-collate-metapilot">Collate — Introducing MetaPilot: Generative AI on your metadata</a></li>
+    <li><a href="https://siliconangle.com/2026/04/30/openmetadata-maker-collate-launches-ai-analytics-chat-driven-dashboards/">SiliconANGLE — Collate launches AI Analytics for chat-driven dashboards</a></li>
+    <li><a href="https://cloud.google.com/products/knowledge-catalog">Google Cloud — Knowledge Catalog (formerly Dataplex)</a></li>
+    <li><a href="https://cloud.google.com/blog/products/data-analytics/introducing-the-google-cloud-knowledge-catalog">Google Cloud Blog — Introducing the Google Cloud Knowledge Catalog</a></li>
+    <li><a href="https://docs.cloud.google.com/dataplex/docs/ai-overview">Google Cloud Docs — Knowledge Catalog for AI agents</a></li>
+    <li><a href="https://docs.cloud.google.com/dataplex/docs/pre-built-tools-with-mcp-toolbox">Google Cloud Docs — Knowledge Catalog with MCP, Gemini, and other agents</a></li>
+    <li><a href="https://www.snowflake.com/en/blog/engineering/snowflake-horizon-vs-databricks-unity-catalog-comparison/">Snowflake Engineering — Horizon vs Databricks Unity Catalog: Iceberg Comparison</a></li>
+    <li><a href="https://www.zenml.io/blog/databricks-vs-snowflake">ZenML — Databricks vs Snowflake: Choosing a Data Intelligence Platform</a></li>
+    <li><a href="https://learn.microsoft.com/en-us/purview/unified-catalog">Microsoft Learn — Purview Unified Catalog</a></li>
+    <li><a href="https://www.microsoft.com/insidetrack/blog/powering-data-governance-at-microsoft-with-purview-unified-catalog/">Microsoft Inside Track — Powering data governance at Microsoft with Purview Unified Catalog</a></li>
+    <li><a href="https://learn.microsoft.com/en-us/purview/ai-microsoft-purview">Microsoft Learn — Purview protections for Copilot and generative AI apps</a></li>
+    <li><a href="https://promethium.ai/guides/data-governance-tools-comparison-collibra-alation-atlan-purview/">Promethium — Data Governance Tools Comparison: Collibra vs Alation vs Atlan vs Purview (2026)</a></li>
+    <li><a href="https://atlan.com/know/ai-agents-for-data-catalog/">Atlan — AI Agents for Data Catalog: Key Capabilities and Limits</a></li>
+    <li><a href="https://www.alation.com/blog/data-management-trends/">Alation — 2026 Data Management Trends</a></li>
+    <li><a href="https://www.sdggroup.com/en/insights/blog/metadata-agentic-ai-the-2026-data-engineering-revolution">SDG Group — Metadata &amp; Agentic AI: The 2026 Data Engineering Revolution</a></li>
+    <li><a href="https://www.dqlabs.ai/blog/best-data-catalog-tools-in-2026-a-practitioners-buyer-guide/">DQLabs — Best Data Catalog Tools in 2026: A Buyer's Guide</a></li>
+    <li><a href="https://www.ovaledge.com/blog/openmetadata-vs-datahub">OvalEdge — OpenMetadata vs DataHub: A Practical Comparison</a></li>
+  </ol>
+</section>
+
+<footer>
+  <span>Compiled July 2026 from public sources; GitHub figures are approximate snapshots.</span>
+  <span class="mono">metadata · lineage · context</span>
+</footer>
+
+</div>
